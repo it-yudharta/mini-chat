@@ -1,0 +1,9 @@
+{
+  "name": "mini-chat",
+  "compatibility_date": "2025-03-17",
+  "assets": {
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+  }
+  // "main": "src/index.js",
+}
