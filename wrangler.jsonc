@@ -5,5 +5,14 @@
     "not_found_handling": "single-page-application",
     "binding": "ASSETS"
   },
-  "main": "api/index.ts"
+  "main": "api/index.ts",
+  "d1_databases": [
+    {
+      "binding": "CHAT_DB",
+      "database_name": "chat-db",
+      "database_id": "bf37690c-c999-494a-a254-b3c83786d2a5",
+      "migrations_table": "migrations",
+      "migrations_dir": "migrations"
+    }
+  ]
 }
