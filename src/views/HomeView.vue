@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { nextTick, ref, useTemplateRef } from 'vue'
+import { nextTick, onMounted, ref, useTemplateRef } from 'vue'
+
+const messages = ref([])
+
+onMounted(async () => {
+  const req = await fetch('api/chats')
+  const data = await req.json()
+  messages.value = data
+})
 
 const messageInput = useTemplateRef('message-input');
 const newMessage = ref('')
@@ -22,7 +30,9 @@ const sendMessage = () => {
 <template>
   <main>
     <div>
-      isi chat
+      <li v-for="message in messages" :key="message">
+        {{ message }}
+      </li>
     </div>
     <div>
       <form @submit.prevent="sendMessage">
