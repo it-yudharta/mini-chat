@@ -3,22 +3,28 @@ import { nextTick, onMounted, ref, useTemplateRef } from 'vue'
 
 const messages = ref([])
 
-onMounted(async () => {
-  const req = await fetch('api/chats')
-  const data = await req.json()
-  messages.value = data
+onMounted(() => {
+  refresh()
 })
 
 const messageInput = useTemplateRef('message-input');
 const newMessage = ref('')
 
-const sendMessage = () => {
+const refresh = async () => {
+  const req = await fetch('api/chats')
+  const data = await req.json()
+  messages.value = data
+}
+
+const sendMessage = async () => {
   if (newMessage.value.trim() === '') {
     newMessage.value = ''
     return
   }
 
-  console.log(`Kirim Pesan: ${newMessage.value}`)
+  const userId = crypto.randomUUID()
+  await fetch('api/chats', {method: 'POST', body: JSON.stringify({user_id: userId, message: newMessage.value})})
+  await refresh()
 
   newMessage.value = ''
   nextTick(() => {

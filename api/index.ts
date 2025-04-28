@@ -1,19 +1,22 @@
-// api/index.ts
+import { Hono } from 'hono'
 
-interface Env {
-  ASSETS: Fetcher;
-  CHAT_DB: D1Database;
-}
+const app = new Hono<{ Bindings: Env }>()
 
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
+app.get('/api/chats', async (c) => {
+  const { results } = await c.env.CHAT_DB.prepare("SELECT * FROM chats").all()
+  return c.json(results)
+})
 
-    if (url.pathname.startsWith("/api/chats")) {
-      const { results } = await env.CHAT_DB.prepare("SELECT * FROM chats").all();
-      return Response.json(results);
-    }
+app.post('/api/chats', async (c) => {
+  const { user_id, message } = await c.req.json()
+  await c.env.CHAT_DB.prepare(`
+    INSERT INTO chats(id, user_id, message) VALUES (?, ?, ?)`
+  ).bind(crypto.randomUUID(), user_id, message).run()
 
-    return env.ASSETS.fetch(request);
-  },
-} satisfies ExportedHandler<Env>;
+  return c.json({message: 'ok'})
+})
+
+// untuk fallback ke frontend
+app.get('*', async (c) => await c.env.ASSETS.fetch(c.req.raw))
+
+export default app
