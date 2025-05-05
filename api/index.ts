@@ -27,6 +27,15 @@ app.put('/api/chats/:id', async (c) => {
   return c.json({message: 'ok'})
 })
 
+app.delete('/api/chats/:id', async (c) => {
+  const { id } = c.req.param()
+  await c.env.CHAT_DB.prepare(`
+    DELETE FROM chats WHERE id = ?
+  `).bind(id).run()
+
+  return c.json({message: 'ok'})
+})
+
 // untuk fallback ke frontend
 app.get('*', async (c) => await c.env.ASSETS.fetch(c.req.raw))
 

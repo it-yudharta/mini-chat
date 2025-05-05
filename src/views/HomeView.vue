@@ -63,6 +63,11 @@ const edit = (msg: Message) => {
   newMessage.value = msg.message
   isNew.value = false
 }
+
+const remove = async (msg: Message) => {
+  await fetch(`api/chats/${msg?.id}`, { method: 'DELETE' })
+  await refresh()
+}
 </script>
 
 <template>
@@ -72,6 +77,7 @@ const edit = (msg: Message) => {
         <div>
           {{ msg.message }}
           <button @click="edit(msg)">edit</button>
+          <button @click="remove(msg)">hapus</button>
         </div>
       </div>
     </div>
