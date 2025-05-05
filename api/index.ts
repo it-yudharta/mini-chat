@@ -16,6 +16,17 @@ app.post('/api/chats', async (c) => {
   return c.json({message: 'ok'})
 })
 
+app.put('/api/chats/:id', async (c) => {
+  const { id } = c.req.param()
+  const { user_id, message } = await c.req.json()
+
+  await c.env.CHAT_DB.prepare(`
+    UPDATE chats SET user_id = ?, message = ? WHERE id = ?
+  `).bind(user_id, message, id).run()
+
+  return c.json({message: 'ok'})
+})
+
 // untuk fallback ke frontend
 app.get('*', async (c) => await c.env.ASSETS.fetch(c.req.raw))
 
