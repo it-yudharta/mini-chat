@@ -54,6 +54,7 @@ const sendMessage = async () => {
 
   newMessage.value = ''
   nextTick(() => {
+    isNew.value = true
     messageInput.value?.focus()
   })
 }
